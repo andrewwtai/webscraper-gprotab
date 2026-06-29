@@ -17,10 +17,13 @@ The GProTab database relies on community-submitted Guitar Pro files.
 | **Guitar Pro Tab** | A proprietary tablature file (`.gp3`/`.gp4`/`.gp5`/`.gpx`) containing arrangement data | Yes | **Yes** — Saved in `source_file` and duplicated to `multimodal_assets` [13, 39] |
 | **Converted MIDI** | Standard MIDI file (`.mid`) exported from the Guitar Pro source file | No (mechanical extraction) | **Yes — the primary output file**; saved in `midi_files/raw` |
 
-### How the ~77,900 file count breaks down
-*   **Target File Count**: 77,924 tabs.
-*   **Discovered URLs**: The directory discovery walk successfully indexed and cached **76,813 unique song tab URLs**, confirming highly complete coverage of the live GProTab database [41].
-*   **Unique Version Semantics**: On GProTab, it is common to have multiple separate URLs for the same song (e.g. `nothing-else-matters` vs. `nothing-else-matters-2` uploaded by different contributors). Each unique URL receives its own generated `song_id` (UUID) and is processed as a separate arrangement [41].
+### Crawl Yield & Live Audit Results (June 2026)
+
+Based on the complete crawl execution of GProTab.net, the real-world dataset yield breaks down as follows [41]:
+
+*   **Discovered URLs**: The directory discovery walk successfully indexed and cached **76,812 unique song tab URLs** out of the expected 77,924 target files. The small delta (~1.4%) is due to empty category listings, dead index loops, or missing artist references on the live site [41].
+*   **Successfully Processed**: Out of the 76,812 discovered URLs, **76,673 files were successfully downloaded, processed, and converted** into standard MIDI format [41].
+*   **Failed / Excluded Files**: The remaining **139 files** permanently failed during the download or conversion phase [41]. These represent broken download links on the GProTab server or corrupted binary headers that MuseScore could not open, and they were discarded to preserve dataset quality [41].
 
 ## Deliverables
 
@@ -31,7 +34,7 @@ gprotab/
 ├── metadata/
 │   └── metadata.jsonl         # Master metadata catalog (one JSON line per song)
 ├── checkpoint.jsonl           # Execution state tracker and crash checkpoint log
-├── discovery_cache.json       # Cached list of the 76,813 discovered song URLs
+├── discovery_cache.json       # Cached list of the 76,812 discovered song URLs
 ├── scanned_artists.json       # Cached list of successfully parsed artists
 └── music_data/
     ├── 0/                     # Integer-named batch folders (max 500 folders per batch)
